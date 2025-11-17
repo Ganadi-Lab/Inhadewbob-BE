@@ -1,4 +1,4 @@
-package GanadiLab.inhadewbob.domain.diet_log.model;
+package GanadiLab.inhadewbob.domain.diet.model;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.menu.model.Menu;
