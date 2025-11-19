@@ -21,7 +21,7 @@ public class ConsumeLogController {
     }
 
     // 소비 현황 수정
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ConsumeLogResponse update(
             @PathVariable Long id,
             @RequestBody ConsumeLogUpdateRequest req) {
