@@ -22,8 +22,9 @@ public class ConsumeLog extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Integer spentAmount;       // 오늘 쓴 금액
+    private Integer spentAmount = 0;       // 오늘 쓴 금액
 
     @Column(nullable = false)
     private Integer remainingBudget;   // 남은 예산
