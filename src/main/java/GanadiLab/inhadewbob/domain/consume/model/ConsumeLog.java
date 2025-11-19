@@ -4,12 +4,15 @@ import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.global.base.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "consume_log")
 public class ConsumeLog extends BaseEntity {
 

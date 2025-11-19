@@ -26,7 +26,6 @@ public class ConsumeLogService {
         ConsumeLog saved = consumeLogRepository.save(
                 ConsumeLog.builder()
                         .member(member)
-                        .spentAmount(req.getSpentAmount())
                         .remainingBudget(req.getRemainingBudget())
                         .date(req.getDate())
                         .build()
@@ -35,19 +34,18 @@ public class ConsumeLogService {
         return toResponse(saved);
     }
 
-    // 수정
     public ConsumeLogResponse update(Long id, ConsumeLogUpdateRequest req) {
 
         ConsumeLog log = consumeLogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("소비 기록이 존재하지 않습니다."));
 
-        log = ConsumeLog.builder()
-                .id(log.getId())
-                .member(log.getMember())
-                .date(log.getDate())
-                .spentAmount(req.getSpentAmount())
-                .remainingBudget(req.getRemainingBudget())
-                .build();
+        // null 체크 후 값만 업데이트
+        if (req.getSpentAmount() != null) {
+            log.setSpentAmount(req.getSpentAmount());
+        }
+        if (req.getRemainingBudget() != null) {
+            log.setRemainingBudget(req.getRemainingBudget());
+        }
 
         consumeLogRepository.save(log);
 
