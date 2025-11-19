@@ -35,10 +35,9 @@ INSERT INTO menu (restaurant_id, menu_name, category, price) VALUES ('4', '해�
 INSERT INTO menu (restaurant_id, menu_name, category, price) VALUES ('4', '아라비아타파스타', '양식', 8900);
 INSERT INTO menu (restaurant_id, menu_name, category, price) VALUES ('4', '뽀모도로파스타', '양식', 8900);
 
+# MEMBER
 
-
-
-
+INSERT INTO member (username, password, nickname, weakly_budget, weekly_budget, eatout_count, mode) VALUES ('test1', '1234', 'test1', 0, 200000, 2, 'EASY');
 
 
 
