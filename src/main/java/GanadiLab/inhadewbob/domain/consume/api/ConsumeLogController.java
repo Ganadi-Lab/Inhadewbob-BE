@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/consume")
+@RequestMapping("/consumes")
 public class ConsumeLogController {
 
     private final ConsumeLogService consumeLogService;
