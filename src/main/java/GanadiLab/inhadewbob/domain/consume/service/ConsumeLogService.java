@@ -108,8 +108,8 @@ public class ConsumeLogService {
     private Integer sumWeeklySpent(LocalDate date) {
         
         // 주차 날짜 범위 계산
-        String startOfWeek = DateUtil.getStartOfWeek(date).toString();
-        String endOfWeek = DateUtil.getEndOfWeek(date).toString();
+        LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
+        LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
 
         return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek);
     }
@@ -121,7 +121,7 @@ public class ConsumeLogService {
                 .memberId(log.getMember().getId())
                 .spentAmount(log.getSpentAmount())
                 .remainingBudget(log.getRemainingBudget())
-                .date(log.getDate())
+                .date(log.getDate().toString())
                 .createdAt(log.getCreatedAt().toString())
                 .build();
     }

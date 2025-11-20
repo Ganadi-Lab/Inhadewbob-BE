@@ -39,8 +39,8 @@ public class DietLogService {
         String todayStr = today.toString();
 
         // 이번 주의 범위 계산
-        String startOfWeek = DateUtil.getStartOfWeek(today).toString();
-        String endOfWeek = DateUtil.getEndOfWeek(today).toString();
+        LocalDate startOfWeek = DateUtil.getStartOfWeek(today);
+        LocalDate endOfWeek = DateUtil.getEndOfWeek(today);
 
         // 이번 주 소비 기록 조회
         ConsumeLog weeklyLog = consumeLogRepository.findWeeklyLog(
@@ -52,7 +52,7 @@ public class DietLogService {
             weeklyLog = consumeLogRepository.save(
                     ConsumeLog.builder()
                             .member(member)
-                            .date(todayStr)
+                            .date(today)
                             .spentAmount(0)
                             .remainingBudget(member.getWeeklyBudget())  // 예산 기본값
                             .build()
