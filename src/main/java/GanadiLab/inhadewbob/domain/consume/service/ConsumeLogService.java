@@ -83,7 +83,7 @@ public class ConsumeLogService {
         return ConsumeStatusResponse.builder()
                 .budget(budget)
                 .thisWeekSpent(thisWeekSpent)
-                .differenceFromLastWeekSpent(lastWeekSpent - thisWeekSpent)
+                .differenceFromLastWeekSpent(thisWeekSpent - lastWeekSpent)
                 .build();
     }
 
