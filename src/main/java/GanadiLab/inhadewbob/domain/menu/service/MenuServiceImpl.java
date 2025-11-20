@@ -33,6 +33,10 @@ public class MenuServiceImpl implements MenuService {
                 .map(Menu::getId)
                 .toList();
 
+        if(selectedMenus.isEmpty()) {
+            selectedMenus = List.of(-1L);
+        }
+
         // + 500 추천
         List<Menu> aroundUp = menuRepository.findMenusAround(category, price + 500, lastWeeks, selectedMenus);
 

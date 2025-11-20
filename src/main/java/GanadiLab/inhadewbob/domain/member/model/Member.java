@@ -29,12 +29,13 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     String nickname;
 
-    @Column(name = "weakly_budget", nullable = true)
+    @Column(name = "weekly_budget", nullable = true)
     Integer weeklyBudget;
 
     @Column(name = "eatout_count", nullable = false)
     Integer eatoutCount;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     Mode mode;
 }

@@ -3,12 +3,19 @@ package GanadiLab.inhadewbob.domain.consume.service;
 import GanadiLab.inhadewbob.domain.consume.dto.request.ConsumeLogCreateRequest;
 import GanadiLab.inhadewbob.domain.consume.dto.request.ConsumeLogUpdateRequest;
 import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeLogResponse;
+import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatResponse;
+import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatusResponse;
 import GanadiLab.inhadewbob.domain.consume.model.ConsumeLog;
 import GanadiLab.inhadewbob.domain.consume.repository.ConsumeLogRepository;
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
+import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.IsoFields;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +57,61 @@ public class ConsumeLogService {
         consumeLogRepository.save(log);
 
         return toResponse(log);
+    }
+
+    public ConsumeStatusResponse getConsumeStatus(Long memberId, LocalDate today) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        Integer budget = member.getWeeklyBudget();
+
+        // 지난주
+        LocalDate lastWeekDay = today.minusWeeks(1);
+
+        Integer thisWeekSpent = sumWeeklySpent(today);
+        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay);
+
+        return ConsumeStatusResponse.builder()
+                .budget(budget)
+                .thisWeekSpent(thisWeekSpent)
+                .differenceFromLastWeekSpent(lastWeekSpent - thisWeekSpent)
+                .build();
+    }
+
+    // 이번주, 지난주, 지지난주 소비 통계
+    public ConsumeStatResponse getConsumeStats(LocalDate today) {
+
+        // 현재 달
+        int currentMonth = today.getMonthValue();
+        // 이번 달의 몇주차인지
+        int currentWeek = today.get(ChronoField.ALIGNED_WEEK_OF_MONTH);
+
+        // 지난주
+        LocalDate lastWeekDay = today.minusWeeks(1);
+        // 지지난주
+        LocalDate twoWeeksAgoDay = lastWeekDay.minusWeeks(1);
+
+        Integer thisWeekSpent = sumWeeklySpent(today);
+        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay);
+        Integer twoWeekSpent = sumWeeklySpent(twoWeeksAgoDay);
+
+        return ConsumeStatResponse.builder()
+                .currentMonth(currentMonth)
+                .currentWeek(currentWeek)
+                .thisWeekSpent(thisWeekSpent)
+                .lastWeekSpent(lastWeekSpent)
+                .twoWeeksAgoSpent(twoWeekSpent)
+                .build();
+    }
+
+    private Integer sumWeeklySpent(LocalDate date) {
+        
+        // 주차 날짜 범위 계산
+        String startOfWeek = DateUtil.getStartOfWeek(date).toString();
+        String endOfWeek = DateUtil.getEndOfWeek(date).toString();
+
+        return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek);
     }
 
     // DTO 변환
