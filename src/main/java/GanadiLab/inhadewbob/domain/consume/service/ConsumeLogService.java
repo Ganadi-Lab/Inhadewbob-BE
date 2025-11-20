@@ -25,7 +25,7 @@ public class ConsumeLogService {
     private final MemberRepository memberRepository;
 
     // 등록
-    public ConsumeLogResponse create(ConsumeLogCreateRequest req) {
+    public ConsumeLogResponse createConsumeLog(ConsumeLogCreateRequest req) {
 
         Member member = memberRepository.findById(req.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -41,7 +41,7 @@ public class ConsumeLogService {
         return toResponse(saved);
     }
 
-    public ConsumeLogResponse update(Long id, ConsumeLogUpdateRequest req) {
+    public ConsumeLogResponse updateConsumeLog(Long id, ConsumeLogUpdateRequest req) {
 
         ConsumeLog log = consumeLogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("소비 기록이 존재하지 않습니다."));

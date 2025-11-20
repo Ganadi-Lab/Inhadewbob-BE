@@ -22,7 +22,7 @@ public class ConsumeLogController {
     // 소비 현황 등록
     @PostMapping
     public ConsumeLogResponse create(@RequestBody ConsumeLogCreateRequest req) {
-        return consumeLogService.create(req);
+        return consumeLogService.createConsumeLog(req);
     }
 
     // 소비 현황 수정
@@ -31,7 +31,7 @@ public class ConsumeLogController {
             @PathVariable Long id,
             @RequestBody ConsumeLogUpdateRequest req) {
 
-        return consumeLogService.update(id, req);
+        return consumeLogService.updateConsumeLog(id, req);
     }
 
     /* 소비 현황 조회 */
