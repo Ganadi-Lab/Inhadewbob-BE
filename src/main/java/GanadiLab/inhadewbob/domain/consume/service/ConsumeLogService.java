@@ -48,8 +48,16 @@ public class ConsumeLogService {
 
         // null 체크 후 값만 업데이트
         if (req.getSpentAmount() != null) {
-            log.setSpentAmount(req.getSpentAmount());
+            int oldSpent = log.getSpentAmount();
+            int newSpent = req.getSpentAmount();
+
+            int diff = newSpent - oldSpent; // 변화량
+            log.setSpentAmount(newSpent);
+
+            // 사용한 금액 수정 시 남은 예산 업데이트
+            log.setRemainingBudget(log.getRemainingBudget() - diff);
         }
+
         if (req.getRemainingBudget() != null) {
             log.setRemainingBudget(req.getRemainingBudget());
         }
