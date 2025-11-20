@@ -25,7 +25,7 @@ public class ConsumeLogService {
     private final MemberRepository memberRepository;
 
     // 등록
-    public ConsumeLogResponse create(ConsumeLogCreateRequest req) {
+    public ConsumeLogResponse createConsumeLog(ConsumeLogCreateRequest req) {
 
         Member member = memberRepository.findById(req.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -41,15 +41,23 @@ public class ConsumeLogService {
         return toResponse(saved);
     }
 
-    public ConsumeLogResponse update(Long id, ConsumeLogUpdateRequest req) {
+    public ConsumeLogResponse updateConsumeLog(Long id, ConsumeLogUpdateRequest req) {
 
         ConsumeLog log = consumeLogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("소비 기록이 존재하지 않습니다."));
 
         // null 체크 후 값만 업데이트
         if (req.getSpentAmount() != null) {
-            log.setSpentAmount(req.getSpentAmount());
+            int oldSpent = log.getSpentAmount();
+            int newSpent = req.getSpentAmount();
+
+            int diff = newSpent - oldSpent; // 변화량
+            log.setSpentAmount(newSpent);
+
+            // 사용한 금액 수정 시 남은 예산 업데이트
+            log.setRemainingBudget(log.getRemainingBudget() - diff);
         }
+
         if (req.getRemainingBudget() != null) {
             log.setRemainingBudget(req.getRemainingBudget());
         }
@@ -108,8 +116,8 @@ public class ConsumeLogService {
     private Integer sumWeeklySpent(LocalDate date) {
         
         // 주차 날짜 범위 계산
-        String startOfWeek = DateUtil.getStartOfWeek(date).toString();
-        String endOfWeek = DateUtil.getEndOfWeek(date).toString();
+        LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
+        LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
 
         return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek);
     }
@@ -121,7 +129,7 @@ public class ConsumeLogService {
                 .memberId(log.getMember().getId())
                 .spentAmount(log.getSpentAmount())
                 .remainingBudget(log.getRemainingBudget())
-                .date(log.getDate())
+                .date(log.getDate().toString())
                 .createdAt(log.getCreatedAt().toString())
                 .build();
     }

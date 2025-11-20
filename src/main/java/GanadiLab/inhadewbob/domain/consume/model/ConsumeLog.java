@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
+
 @Builder
 @Getter
 @Setter
@@ -33,5 +35,5 @@ public class ConsumeLog extends BaseEntity {
     private Integer remainingBudget;   // 남은 예산
 
     @Column(nullable = false)
-    private String date;               // YYYY-MM-DD
+    private LocalDate date;               // YYYY-MM-DD
 }
