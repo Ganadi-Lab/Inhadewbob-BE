@@ -16,11 +16,13 @@ public class DietLogController {
 
     @PostMapping
     public DietLogResponse create(@RequestBody DietLogCreateRequest request) {
+
         return dietLogService.create(request);
     }
 
     @GetMapping("/{memberId}")
     public List<DietLogResponse> getByMember(@PathVariable Long memberId) {
+
         return dietLogService.getByMember(memberId);
     }
 }
