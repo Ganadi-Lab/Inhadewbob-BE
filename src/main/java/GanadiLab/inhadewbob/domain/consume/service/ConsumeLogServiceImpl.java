@@ -38,7 +38,7 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
                         .build()
         );
 
-        return toResponse(saved);
+        return ConsumeLogResponse.from(saved);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
 
         consumeLogRepository.save(log);
 
-        return toResponse(log);
+        return ConsumeLogResponse.from(log);
     }
 
     @Override
@@ -123,17 +123,5 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
         LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
 
         return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek);
-    }
-
-    // DTO 변환
-    private ConsumeLogResponse toResponse(ConsumeLog log) {
-        return ConsumeLogResponse.builder()
-                .id(log.getId())
-                .memberId(log.getMember().getId())
-                .spentAmount(log.getSpentAmount())
-                .remainingBudget(log.getRemainingBudget())
-                .date(log.getDate().toString())
-                .createdAt(log.getCreatedAt().toString())
-                .build();
     }
 }
