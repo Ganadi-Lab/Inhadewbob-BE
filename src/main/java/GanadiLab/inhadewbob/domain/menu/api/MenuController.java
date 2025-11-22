@@ -21,7 +21,7 @@ public class MenuController {
     private final MenuService menuService;
 
 
-    @GetMapping
+    @GetMapping("/roulette")
     public ResponseEntity<MenuDTO.Response> getMenusByRoulette(
             @RequestParam("date") LocalDate date,
             @RequestParam("category") String category,
@@ -33,7 +33,7 @@ public class MenuController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/recom")
     public ResponseEntity<MenuDTO.RecommendResponse> getRecommendPrice(
             @Param("date") LocalDate date,
             @Param("eatout") Integer eatout
