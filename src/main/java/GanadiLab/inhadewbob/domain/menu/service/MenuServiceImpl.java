@@ -45,8 +45,8 @@ public class MenuServiceImpl implements MenuService {
 
         return MenuDTO.Response.from(
                 rouletteMenus.stream().map(MenuDTO.RouletteResponse::from).toList(),
-                aroundUp.stream().map(MenuDTO.AroundUpResponse::from).toList(),
-                aroundDown.stream().map(MenuDTO.AroundDownResponse::from).toList()
+                aroundUp.stream().map(MenuDTO.RouletteResponse::from).toList(),
+                aroundDown.stream().map(MenuDTO.RouletteResponse::from).toList()
         );
     }
 }
