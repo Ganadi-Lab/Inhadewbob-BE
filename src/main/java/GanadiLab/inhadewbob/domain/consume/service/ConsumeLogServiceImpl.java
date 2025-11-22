@@ -13,8 +13,10 @@ import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+import java.time.temporal.WeekFields;
 
 @Service
 @RequiredArgsConstructor
@@ -98,8 +100,10 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
 
         // 현재 달
         int currentMonth = today.getMonthValue();
+
         // 이번 달의 몇주차인지
-        int currentWeek = today.get(ChronoField.ALIGNED_WEEK_OF_MONTH);
+        WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 1);
+        int currentWeek = today.get(weekFields.weekOfMonth());
 
         // 지난 주
         LocalDate lastWeekDay = today.minusWeeks(1);
