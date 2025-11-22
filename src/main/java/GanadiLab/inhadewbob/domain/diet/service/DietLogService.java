@@ -4,6 +4,7 @@ import GanadiLab.inhadewbob.domain.diet.dto.request.DietLogCreateRequest;
 import GanadiLab.inhadewbob.domain.diet.dto.response.DietLogResponse;
 
 import java.util.List;
+import java.time.LocalDate;
 
 public interface DietLogService {
 
@@ -12,4 +13,7 @@ public interface DietLogService {
 
     /* 특정 유저의 식단 기록 조회 */
     List<DietLogResponse> getByMember(Long memberId);
+
+    /* 특정 유저의 일별 식단 기록 조회 */
+    List<DietLogResponse> getDaily(Long memberId, LocalDate date);
 }

@@ -15,6 +15,7 @@ import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -103,5 +104,17 @@ public class DietLogServiceImpl implements  DietLogService {
                 .restaurantName(diet.getMenu().getRestaurant().getName())
                 .createdAt(diet.getCreatedAt().toString())
                 .build();
+    }
+
+    @Override
+    public List<DietLogResponse> getDaily(Long memberId, LocalDate date) {
+
+        LocalDateTime start = date.atStartOfDay();       // 00:00:00
+        LocalDateTime end = date.atTime(23, 59, 59);     // 23:59:59
+
+        return dietLogRepository.findByMemberIdAndDate(memberId, start, end)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 }
