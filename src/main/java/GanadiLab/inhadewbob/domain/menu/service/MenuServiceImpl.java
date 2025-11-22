@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,13 +35,17 @@ public class MenuServiceImpl implements MenuService {
 
         // 지난 주
         LocalDate lastWeekDay = date.minusWeeks(1);
-        LocalDate start = DateUtil.getStartOfWeek(lastWeekDay);
-        LocalDate end = DateUtil.getEndOfWeek(lastWeekDay);
+        LocalDateTime start = DateUtil.getStartOfWeek(lastWeekDay).atStartOfDay();
+        LocalDateTime end = DateUtil.getEndOfWeek(lastWeekDay).plusDays(1).atStartOfDay();
         
         // 지난 주에 먹은 메뉴 리스트
         List<Long> lastWeeks = dietLogRepository.findByMemberIdAndDate(memberId, start, end).stream()
                 .map(d -> d.getMenu().getId())
                 .toList();
+
+        if(lastWeeks.isEmpty()) {
+            lastWeeks = List.of(-1L);
+        }
 
         // 랜덤 돌리기
         List<Menu> rouletteMenus = menuRepository.findMenusByRoulette(category, price, lastWeeks);

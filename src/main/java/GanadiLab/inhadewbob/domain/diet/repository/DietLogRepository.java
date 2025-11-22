@@ -21,14 +21,4 @@ public interface DietLogRepository extends JpaRepository<DietLog, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
-
-    // 특정 유저의 지난 주 식단 기록 조회 시 사용
-    @Query("SELECT d FROM DietLog d " +
-            "WHERE d.member.id = :memberId " +
-            "AND d.createdAt BETWEEN :start AND :end")
-    List<DietLog> findByMemberIdAndDate(
-            @Param("memberId") Long memberId,
-            @Param("start") LocalDate start,
-            @Param("end") LocalDate end
-    );
 }
