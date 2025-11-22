@@ -57,4 +57,19 @@ public class MenuDTO {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecommendResponse {
+        private Integer recommendPrice;
+
+        public static RecommendResponse from(Integer recommendPrice) {
+
+            return RecommendResponse.builder()
+                    .recommendPrice(recommendPrice)
+                    .build();
+        }
+    }
 }
