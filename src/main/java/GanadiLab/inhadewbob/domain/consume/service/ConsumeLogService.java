@@ -17,8 +17,8 @@ public interface ConsumeLogService {
     ConsumeLogResponse updateConsumeLog(Long id, ConsumeLogUpdateRequest req);
 
     /* 이번 주 소비 현황 조회 */
-    ConsumeStatusResponse getConsumeStatus(Long memberId, LocalDate today);
+    ConsumeStatusResponse getConsumeStatus(LocalDate today, Long memberId);
 
     /* 이번 주, 지난 주, 지지난 주 소비 통계 조회 */
-    ConsumeStatResponse getConsumeStats(LocalDate today);
+    ConsumeStatResponse getConsumeStats(LocalDate today, Long memberId);
 }

@@ -83,27 +83,15 @@ public class DietLogServiceImpl implements  DietLogService {
                         .build()
         );
 
-        return toResponse(dietLog);
+        return DietLogResponse.from(dietLog);
     }
 
     @Override
     public List<DietLogResponse> getByMember(Long memberId) {
         return dietLogRepository.findByMemberId(memberId)
                 .stream()
-                .map(this::toResponse)
+                .map(DietLogResponse::from)
                 .toList();
-    }
-
-    private DietLogResponse toResponse(DietLog diet) {
-        return DietLogResponse.builder()
-                .id(diet.getId())
-                .memberId(diet.getMember().getId())
-                .menuId(diet.getMenu().getId())
-                .menuName(diet.getMenu().getName())
-                .price(diet.getMenu().getPrice())
-                .restaurantName(diet.getMenu().getRestaurant().getName())
-                .createdAt(diet.getCreatedAt().toString())
-                .build();
     }
 
     @Override
@@ -114,7 +102,7 @@ public class DietLogServiceImpl implements  DietLogService {
 
         return dietLogRepository.findByMemberIdAndDate(memberId, start, end)
                 .stream()
-                .map(this::toResponse)
+                .map(DietLogResponse::from)
                 .toList();
     }
 }

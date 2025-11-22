@@ -16,12 +16,12 @@ public class MenuDTO {
     @AllArgsConstructor
     public static class Response {
         List<RouletteResponse> rouletteResponses;
-        List<AroundUpResponse> aroundUpResponses;       // 최대 2개
-        List<AroundDownResponse> aroundDownResponses;   // 최대 2개
+        List<RouletteResponse> aroundUpResponses;       // 최대 2개
+        List<RouletteResponse> aroundDownResponses;   // 최대 2개
 
         public static Response from(List<RouletteResponse> rouletteResponses,
-                                    List<AroundUpResponse> aroundUpResponse,
-                                    List<AroundDownResponse> aroundDownResponse) {
+                                    List<RouletteResponse> aroundUpResponse,
+                                    List<RouletteResponse> aroundDownResponse) {
 
             return Response.builder()
                     .rouletteResponses(rouletteResponses)
@@ -62,52 +62,13 @@ public class MenuDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class AroundUpResponse {
-        private String restaurantName;
-        private String location;
-        private Long menuId;
-        private String menuName;
-        private String category;
-        private Integer price;
-        private String imagePath;
+    public static class RecommendResponse {
+        private Integer recommendPrice;
 
-        public static AroundUpResponse from(Menu menu) {
+        public static RecommendResponse from(Integer recommendPrice) {
 
-            return AroundUpResponse.builder()
-                    .restaurantName(menu.getRestaurant().getName())
-                    .location(menu.getRestaurant().getName())
-                    .menuId(menu.getId())
-                    .menuName(menu.getName())
-                    .category(menu.getCategory())
-                    .price(menu.getPrice())
-                    .imagePath(menu.getStoredFileName())
-                    .build();
-        }
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AroundDownResponse {
-        private String restaurantName;
-        private String location;
-        private Long menuId;
-        private String menuName;
-        private String category;
-        private Integer price;
-        private String imagePath;
-
-        public static AroundDownResponse from(Menu menu) {
-
-            return AroundDownResponse.builder()
-                    .restaurantName(menu.getRestaurant().getName())
-                    .location(menu.getRestaurant().getName())
-                    .menuId(menu.getId())
-                    .menuName(menu.getName())
-                    .category(menu.getCategory())
-                    .price(menu.getPrice())
-                    .imagePath(menu.getStoredFileName())
+            return RecommendResponse.builder()
+                    .recommendPrice(recommendPrice)
                     .build();
         }
     }

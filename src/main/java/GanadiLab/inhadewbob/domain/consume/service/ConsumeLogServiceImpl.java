@@ -13,8 +13,10 @@ import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+import java.time.temporal.WeekFields;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
                         .build()
         );
 
-        return toResponse(saved);
+        return ConsumeLogResponse.from(saved);
     }
 
     @Override
@@ -65,11 +67,11 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
 
         consumeLogRepository.save(log);
 
-        return toResponse(log);
+        return ConsumeLogResponse.from(log);
     }
 
     @Override
-    public ConsumeStatusResponse getConsumeStatus(Long memberId, LocalDate today) {
+    public ConsumeStatusResponse getConsumeStatus(LocalDate today, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -79,8 +81,8 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
         // 지난주
         LocalDate lastWeekDay = today.minusWeeks(1);
 
-        Integer thisWeekSpent = sumWeeklySpent(today);
-        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay);
+        Integer thisWeekSpent = sumWeeklySpent(today, memberId);
+        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay, memberId);
 
         return ConsumeStatusResponse.builder()
                 .budget(budget)
@@ -89,23 +91,28 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
                 .build();
     }
 
-    // 이번주, 지난주, 지지난주 소비 통계
+    // 이번 주, 지난 주, 지지난 주 소비 통계
     @Override
-    public ConsumeStatResponse getConsumeStats(LocalDate today) {
+    public ConsumeStatResponse getConsumeStats(LocalDate today, Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         // 현재 달
         int currentMonth = today.getMonthValue();
-        // 이번 달의 몇주차인지
-        int currentWeek = today.get(ChronoField.ALIGNED_WEEK_OF_MONTH);
 
-        // 지난주
+        // 이번 달의 몇주차인지
+        WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 1);
+        int currentWeek = today.get(weekFields.weekOfMonth());
+
+        // 지난 주
         LocalDate lastWeekDay = today.minusWeeks(1);
-        // 지지난주
+        // 지지난 주
         LocalDate twoWeeksAgoDay = lastWeekDay.minusWeeks(1);
 
-        Integer thisWeekSpent = sumWeeklySpent(today);
-        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay);
-        Integer twoWeekSpent = sumWeeklySpent(twoWeeksAgoDay);
+        Integer thisWeekSpent = sumWeeklySpent(today, memberId);
+        Integer lastWeekSpent = sumWeeklySpent(lastWeekDay, memberId);
+        Integer twoWeekSpent = sumWeeklySpent(twoWeeksAgoDay, memberId);
 
         return ConsumeStatResponse.builder()
                 .currentMonth(currentMonth)
@@ -116,24 +123,12 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
                 .build();
     }
 
-    private Integer sumWeeklySpent(LocalDate date) {
+    private Integer sumWeeklySpent(LocalDate date, Long memberId) {
         
         // 주차 날짜 범위 계산
         LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
         LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
 
-        return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek);
-    }
-
-    // DTO 변환
-    private ConsumeLogResponse toResponse(ConsumeLog log) {
-        return ConsumeLogResponse.builder()
-                .id(log.getId())
-                .memberId(log.getMember().getId())
-                .spentAmount(log.getSpentAmount())
-                .remainingBudget(log.getRemainingBudget())
-                .date(log.getDate().toString())
-                .createdAt(log.getCreatedAt().toString())
-                .build();
+        return consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek, memberId);
     }
 }

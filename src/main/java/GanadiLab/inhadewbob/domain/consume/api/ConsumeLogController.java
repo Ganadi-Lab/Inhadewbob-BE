@@ -19,13 +19,13 @@ public class ConsumeLogController {
 
     private final ConsumeLogService consumeLogService;
 
-    // 소비 현황 등록
+    /* 소비 현황 등록 */
     @PostMapping
     public ConsumeLogResponse create(@RequestBody ConsumeLogCreateRequest req) {
         return consumeLogService.createConsumeLog(req);
     }
 
-    // 소비 현황 수정
+    /* 소비 현황 수정 */
     @PatchMapping("/{id}")
     public ConsumeLogResponse update(
             @PathVariable Long id,
@@ -41,7 +41,7 @@ public class ConsumeLogController {
     ) {
         return ResponseEntity.ok().body(
                 // 아직 임의의 memberId 삽입 -> 추후 로그인한 회원으로 변경
-                consumeLogService.getConsumeStatus(1L, date)
+                consumeLogService.getConsumeStatus(date, 1L)
         );
     }
 
@@ -51,7 +51,8 @@ public class ConsumeLogController {
             @RequestParam("date") LocalDate date
     ) {
         return ResponseEntity.ok().body(
-                consumeLogService.getConsumeStats(date)
+                // 아직 임의의 memberId 삽입 -> 추후 로그인한 회원으로 변경
+                consumeLogService.getConsumeStats(date, 1L)
         );
     }
 }
