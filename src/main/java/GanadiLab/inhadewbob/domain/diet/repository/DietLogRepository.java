@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -19,5 +20,15 @@ public interface DietLogRepository extends JpaRepository<DietLog, Long> {
             @Param("memberId") Long memberId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
+    );
+
+    // 특정 유저의 지난 주 식단 기록 조회 시 사용
+    @Query("SELECT d FROM DietLog d " +
+            "WHERE d.member.id = :memberId " +
+            "AND d.createdAt BETWEEN :start AND :end")
+    List<DietLog> findByMemberIdAndDate(
+            @Param("memberId") Long memberId,
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end
     );
 }
