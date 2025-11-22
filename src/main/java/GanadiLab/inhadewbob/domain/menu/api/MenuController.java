@@ -35,12 +35,11 @@ public class MenuController {
 
     @GetMapping("/recom")
     public ResponseEntity<MenuDTO.RecommendResponse> getRecommendPrice(
-            @Param("date") LocalDate date,
-            @Param("eatout") Integer eatout
+            @Param("date") LocalDate date
     ) {
         return ResponseEntity.ok().body(
                 // 임시 회원 번호
-                menuService.getRecommendation(date, eatout, 1L)
+                menuService.getRecommendation(date, 1L)
         );
     }
 }

@@ -11,5 +11,5 @@ public interface MenuService {
     MenuDTO.Response getMenusByRoulette(LocalDate date, String category, Integer price, Long memberId);
 
     /* 추천 예산 조회 */
-    MenuDTO.RecommendResponse getRecommendation(LocalDate date, Integer eatout, Long memberId);
+    MenuDTO.RecommendResponse getRecommendation(LocalDate date, Long memberId);
 }

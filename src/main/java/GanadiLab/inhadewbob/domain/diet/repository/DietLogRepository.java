@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -20,5 +19,15 @@ public interface DietLogRepository extends JpaRepository<DietLog, Long> {
             @Param("memberId") Long memberId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
+    );
+
+    @Query("SELECT COUNT(d) FROM DietLog d " +
+            "WHERE d.member.id = :memberId " +
+            "AND d.createdAt >= :start " +
+            "AND d.createdAt < :end")
+    Integer countDietLogMyMemberIdAndDate(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("memberId") Long memberId
     );
 }

@@ -73,18 +73,19 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDTO.RecommendResponse getRecommendation(LocalDate date, Integer eatout, Long memberId) {
+    public MenuDTO.RecommendResponse getRecommendation(LocalDate date, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
-        LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
+        LocalDateTime start = DateUtil.getStartOfWeek(date).atStartOfDay();
+        LocalDateTime end = DateUtil.getEndOfWeek(date).plusDays(1).atStartOfDay();
 
-        Integer currentSpent = consumeLogRepository.sumWeeklyConsumeLog(startOfWeek, endOfWeek, memberId);
+        Integer currentSpent = consumeLogRepository.sumWeeklyConsumeLog(start.toLocalDate(), end.toLocalDate(), memberId);
+        Integer eatout = dietLogRepository.countDietLogMyMemberIdAndDate(start, end, memberId);
 
         Integer remainingBudget = member.getWeeklyBudget() - currentSpent;
-        Integer remainingEatoutCount = member.getEatoutCount() - eatout + 1;
+        Integer remainingEatoutCount = member.getEatoutCount() - eatout;
         Integer recommendation = 0;
 
         if(remainingBudget <=0 || remainingEatoutCount <= 0) {
