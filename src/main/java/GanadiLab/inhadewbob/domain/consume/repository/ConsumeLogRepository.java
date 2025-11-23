@@ -24,9 +24,11 @@ public interface ConsumeLogRepository extends JpaRepository<ConsumeLog, Long> {
     );
 
     @Query(value = "SELECT COALESCE(SUM(spent_amount), 0) FROM consume_log " +
-            "WHERE date BETWEEN :start AND :end", nativeQuery = true)
+            "WHERE member_id = :memberId " +
+            "AND date BETWEEN :start AND :end", nativeQuery = true)
     Integer sumWeeklyConsumeLog(
             @Param("start") LocalDate start,
-            @Param("end")  LocalDate end
+            @Param("end")  LocalDate end,
+            @Param("memberId") Long memberId
     );
 }

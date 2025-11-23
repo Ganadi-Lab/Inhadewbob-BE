@@ -20,4 +20,14 @@ public interface DietLogRepository extends JpaRepository<DietLog, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    @Query("SELECT COUNT(d) FROM DietLog d " +
+            "WHERE d.member.id = :memberId " +
+            "AND d.createdAt >= :start " +
+            "AND d.createdAt < :end")
+    Integer countDietLogMyMemberIdAndDate(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("memberId") Long memberId
+    );
 }
