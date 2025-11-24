@@ -28,7 +28,7 @@ public class MenuServiceImpl implements MenuService {
     private final ConsumeLogRepository consumeLogRepository;
 
     @Override
-    public MenuDTO.Response getMenusByRoulette(LocalDate date, String category, Integer price, Long memberId) {
+    public MenuDTO.Response getMenusByRoulette(LocalDate date, List<String> categories, Integer price, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -48,7 +48,7 @@ public class MenuServiceImpl implements MenuService {
         }
 
         // 랜덤 돌리기
-        List<Menu> rouletteMenus = menuRepository.findMenusByRoulette(category, price, lastWeeks);
+        List<Menu> rouletteMenus = menuRepository.findMenusByRoulette(categories, price, lastWeeks);
 
         // 랜덤 뽑기 결과
         List<Long> selectedMenus = rouletteMenus.stream()
@@ -60,10 +60,10 @@ public class MenuServiceImpl implements MenuService {
         }
 
         // + 500 추천
-        List<Menu> aroundUp = menuRepository.findMenusAround(category, price + 500, lastWeeks, selectedMenus);
+        List<Menu> aroundUp = menuRepository.findMenusAround(categories, price + 500, lastWeeks, selectedMenus);
 
         // - 500 추천
-        List<Menu> aroundDown = menuRepository.findMenusAround(category, price - 500, lastWeeks, selectedMenus);
+        List<Menu> aroundDown = menuRepository.findMenusAround(categories, price - 500, lastWeeks, selectedMenus);
 
         return MenuDTO.Response.from(
                 rouletteMenus.stream().map(MenuDTO.RouletteResponse::from).toList(),

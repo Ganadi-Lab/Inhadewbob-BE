@@ -24,12 +24,12 @@ public class MenuController {
     @GetMapping("/roulette")
     public ResponseEntity<MenuDTO.Response> getMenusByRoulette(
             @RequestParam("date") LocalDate date,
-            @RequestParam("category") String category,
+            @RequestParam("category") List<String> categories,
             @RequestParam("price") Integer price
     ) {
         return ResponseEntity.ok().body(
                 // 임시 회원 번호
-                menuService.getMenusByRoulette(date, category, price, 1L)
+                menuService.getMenusByRoulette(date, categories, price, 1L)
         );
     }
 

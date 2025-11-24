@@ -30,4 +30,6 @@ public interface DietLogRepository extends JpaRepository<DietLog, Long> {
             @Param("end") LocalDateTime end,
             @Param("memberId") Long memberId
     );
+
+    List<DietLog> findTop5ByMemberIdOrderByCreatedAtDesc(Long memberId);
 }
