@@ -3,6 +3,8 @@ package GanadiLab.inhadewbob.domain.diet.service;
 import GanadiLab.inhadewbob.domain.consume.model.ConsumeLog;
 import GanadiLab.inhadewbob.domain.diet.dto.request.DietLogCreateRequest;
 import GanadiLab.inhadewbob.domain.diet.dto.response.DietLogResponse;
+import GanadiLab.inhadewbob.domain.diet.dto.response.LatestDietLogResponse;
+import GanadiLab.inhadewbob.domain.diet.dto.response.WeeklyDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.model.DietLog;
 import GanadiLab.inhadewbob.domain.diet.repository.DietLogRepository;
 import GanadiLab.inhadewbob.domain.member.model.Member;
@@ -10,17 +12,20 @@ import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
 import GanadiLab.inhadewbob.domain.menu.model.Menu;
 import GanadiLab.inhadewbob.domain.menu.repository.MenuRepository;
 import GanadiLab.inhadewbob.domain.consume.repository.ConsumeLogRepository;
+
 import java.time.LocalDate;
+
 import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DietLogServiceImpl implements  DietLogService {
+public class DietLogServiceImpl implements DietLogService {
 
     private final DietLogRepository dietLogRepository;
     private final MemberRepository memberRepository;
@@ -103,6 +108,35 @@ public class DietLogServiceImpl implements  DietLogService {
         return dietLogRepository.findByMemberIdAndDate(memberId, start, end)
                 .stream()
                 .map(DietLogResponse::from)
+                .toList();
+    }
+
+    @Override
+    public List<WeeklyDietLogResponse> getWeekly(LocalDate start, LocalDate end, Long memberId) {
+
+        ArrayList<WeeklyDietLogResponse> responses = new ArrayList<>();
+
+        for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)) {
+
+            LocalDateTime startOfDay = date.atStartOfDay();       // 00:00:00
+            LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();     // 다음날 00:00:00
+
+            Integer count = dietLogRepository.countDietLogMyMemberIdAndDate(startOfDay, endOfDay, memberId);
+
+            responses.add(WeeklyDietLogResponse.builder()
+                    .date(date)
+                    .count(count)
+                    .build());
+        }
+
+        return responses;
+    }
+
+    @Override
+    public List<LatestDietLogResponse> getLatest(Long memberId) {
+
+        return dietLogRepository.findTop5ByMemberIdOrderByCreatedAtDesc(memberId).stream()
+                .map(LatestDietLogResponse::from)
                 .toList();
     }
 }
