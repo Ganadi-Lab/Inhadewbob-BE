@@ -20,14 +20,17 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
-    String username;
-
-    @Column(nullable = false)
-    String password;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     String nickname;
+
+    @Column(nullable = false)
+    private String provider;        // "google"
+
+    @Column(nullable = false, unique = true)
+    private String providerId;      // 구글 sub
 
     @Column(name = "weekly_budget", nullable = true)
     Integer weeklyBudget;
