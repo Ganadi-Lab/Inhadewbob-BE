@@ -28,10 +28,7 @@ public class MenuServiceImpl implements MenuService {
     private final ConsumeLogRepository consumeLogRepository;
 
     @Override
-    public MenuDTO.Response getMenusByRoulette(LocalDate date, List<String> categories, Integer price, Long memberId) {
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    public MenuDTO.Response getMenusByRoulette(LocalDate date, List<String> categories, Integer price, Member member) {
 
         // 지난 주
         LocalDate lastWeekDay = date.minusWeeks(1);
@@ -39,7 +36,7 @@ public class MenuServiceImpl implements MenuService {
         LocalDateTime end = DateUtil.getEndOfWeek(lastWeekDay).plusDays(1).atStartOfDay();
         
         // 지난 주에 먹은 메뉴 리스트
-        List<Long> lastWeeks = dietLogRepository.findByMemberIdAndDate(memberId, start, end).stream()
+        List<Long> lastWeeks = dietLogRepository.findByMemberIdAndDate(member.getId(), start, end).stream()
                 .map(d -> d.getMenu().getId())
                 .toList();
 
@@ -73,10 +70,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDTO.RecommendResponse getRecommendation(LocalDate date, Long memberId) {
+    public MenuDTO.RecommendResponse getRecommendation(LocalDate date, Member member) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        Long memberId = member.getId();
 
         LocalDateTime start = DateUtil.getStartOfWeek(date).atStartOfDay();
         LocalDateTime end = DateUtil.getEndOfWeek(date).plusDays(1).atStartOfDay();
