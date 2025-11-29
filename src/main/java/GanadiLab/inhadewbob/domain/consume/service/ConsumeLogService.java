@@ -11,10 +11,10 @@ import java.time.LocalDate;
 public interface ConsumeLogService {
 
     /* 소비 기록 등록 */
-    ConsumeLogResponse createConsumeLog(ConsumeLogCreateRequest req);
+    ConsumeLogResponse createConsumeLog(Long memberId, ConsumeLogCreateRequest req);
 
     /* 소비 기록 수정 */
-    ConsumeLogResponse updateConsumeLog(Long id, ConsumeLogUpdateRequest req);
+    ConsumeLogResponse updateConsumeLog(Long id, Long memberId, ConsumeLogUpdateRequest req);
 
     /* 이번 주 소비 현황 조회 */
     ConsumeStatusResponse getConsumeStatus(LocalDate today, Long memberId);

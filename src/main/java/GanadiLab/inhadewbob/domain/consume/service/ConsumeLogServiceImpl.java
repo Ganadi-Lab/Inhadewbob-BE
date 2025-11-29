@@ -27,9 +27,9 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
 
     // 등록
     @Override
-    public ConsumeLogResponse createConsumeLog(ConsumeLogCreateRequest req) {
+    public ConsumeLogResponse createConsumeLog(Long memberId, ConsumeLogCreateRequest req) {
 
-        Member member = memberRepository.findById(req.getMemberId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         ConsumeLog saved = consumeLogRepository.save(
@@ -44,10 +44,14 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
     }
 
     @Override
-    public ConsumeLogResponse updateConsumeLog(Long id, ConsumeLogUpdateRequest req) {
+    public ConsumeLogResponse updateConsumeLog(Long id, Long memberId, ConsumeLogUpdateRequest req) {
 
         ConsumeLog log = consumeLogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("소비 기록이 존재하지 않습니다."));
+
+        if (!log.getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("본인의 소비 기록만 수정할 수 있습니다.");
+        }
 
         // null 체크 후 값만 업데이트
         if (req.getSpentAmount() != null) {
