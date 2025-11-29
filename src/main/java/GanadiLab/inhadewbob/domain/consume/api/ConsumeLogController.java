@@ -6,7 +6,7 @@ import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeLogResponse;
 import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatResponse;
 import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatusResponse;
 import GanadiLab.inhadewbob.domain.consume.service.ConsumeLogService;
-import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
+import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

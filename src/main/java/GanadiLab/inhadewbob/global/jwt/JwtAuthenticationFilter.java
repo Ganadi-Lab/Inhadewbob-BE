@@ -1,8 +1,8 @@
-package GanadiLab.inhadewbob.global.security.jwt;
+package GanadiLab.inhadewbob.global.jwt;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
-import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
+import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

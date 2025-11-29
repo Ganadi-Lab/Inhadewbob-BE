@@ -2,7 +2,7 @@ package GanadiLab.inhadewbob.domain.menu.api;
 
 import GanadiLab.inhadewbob.domain.menu.dto.MenuDTO;
 import GanadiLab.inhadewbob.domain.menu.service.MenuService;
-import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
+import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;

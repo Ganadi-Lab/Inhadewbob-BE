@@ -5,7 +5,7 @@ import GanadiLab.inhadewbob.domain.diet.dto.response.DietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.dto.response.LatestDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.dto.response.WeeklyDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.service.DietLogService;
-import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
+import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
