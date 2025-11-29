@@ -1,8 +1,9 @@
-package GanadiLab.inhadewbob.global.config.auth;
+package GanadiLab.inhadewbob.global.oauth;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.member.model.Mode;
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
+import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
