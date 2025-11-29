@@ -6,8 +6,10 @@ import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeLogResponse;
 import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatResponse;
 import GanadiLab.inhadewbob.domain.consume.dto.response.ConsumeStatusResponse;
 import GanadiLab.inhadewbob.domain.consume.service.ConsumeLogService;
+import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,17 +23,19 @@ public class ConsumeLogController {
 
     /* 소비 현황 등록 */
     @PostMapping
-    public ConsumeLogResponse create(@RequestBody ConsumeLogCreateRequest req) {
-        return consumeLogService.createConsumeLog(req);
+    public ConsumeLogResponse create(@AuthenticationPrincipal PrincipalDetails principal, @RequestBody ConsumeLogCreateRequest req) {
+        Long memberId = principal.getMember().getId();
+        return consumeLogService.createConsumeLog(memberId, req);
     }
 
     /* 소비 현황 수정 */
     @PatchMapping("/{id}")
     public ConsumeLogResponse update(
+            @AuthenticationPrincipal PrincipalDetails principal,
             @PathVariable Long id,
             @RequestBody ConsumeLogUpdateRequest req) {
-
-        return consumeLogService.updateConsumeLog(id, req);
+        Long memberId = principal.getMember().getId();
+        return consumeLogService.updateConsumeLog(id, memberId, req);
     }
 
     /* 소비 현황 조회 */
