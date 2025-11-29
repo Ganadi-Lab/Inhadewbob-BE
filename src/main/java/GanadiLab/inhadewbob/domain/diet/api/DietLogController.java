@@ -41,19 +41,22 @@ public class DietLogController {
         return dietLogService.getDaily(memberId, date);
     }
 
+    /* 주별 식단 기록 조회 */
     @GetMapping("/weekly")
     public List<WeeklyDietLogResponse> getWeekly(
             @RequestParam("start") LocalDate start,
-            @RequestParam("end") LocalDate end
+            @RequestParam("end") LocalDate end,
+            @AuthenticationPrincipal PrincipalDetails principal
     ) {
-        // 임시 회원 번호
-        return dietLogService.getWeekly(start, end, 1L);
+        return dietLogService.getWeekly(start, end, principal.getMember());
     }
 
+    /* 최근 식단 기록 조회 (5개) */
     @GetMapping("/latest")
-    public List<LatestDietLogResponse> getLatest() {
-        // 임시 회원 번호
-        return dietLogService.getLatest(1L);
+    public List<LatestDietLogResponse> getLatest(
+            @AuthenticationPrincipal PrincipalDetails principal
+    ) {
+        return dietLogService.getLatest(principal.getMember());
     }
 
 }

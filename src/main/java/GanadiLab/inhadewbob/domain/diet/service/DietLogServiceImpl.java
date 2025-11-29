@@ -112,7 +112,7 @@ public class DietLogServiceImpl implements DietLogService {
     }
 
     @Override
-    public List<WeeklyDietLogResponse> getWeekly(LocalDate start, LocalDate end, Long memberId) {
+    public List<WeeklyDietLogResponse> getWeekly(LocalDate start, LocalDate end, Member member) {
 
         ArrayList<WeeklyDietLogResponse> responses = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class DietLogServiceImpl implements DietLogService {
             LocalDateTime startOfDay = date.atStartOfDay();       // 00:00:00
             LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();     // 다음날 00:00:00
 
-            Integer count = dietLogRepository.countDietLogMyMemberIdAndDate(startOfDay, endOfDay, memberId);
+            Integer count = dietLogRepository.countDietLogMyMemberIdAndDate(startOfDay, endOfDay, member.getId());
 
             responses.add(WeeklyDietLogResponse.builder()
                     .date(date)
@@ -133,9 +133,9 @@ public class DietLogServiceImpl implements DietLogService {
     }
 
     @Override
-    public List<LatestDietLogResponse> getLatest(Long memberId) {
+    public List<LatestDietLogResponse> getLatest(Member member) {
 
-        return dietLogRepository.findTop5ByMemberIdOrderByCreatedAtDesc(memberId).stream()
+        return dietLogRepository.findTop5ByMemberIdOrderByCreatedAtDesc(member.getId()).stream()
                 .map(LatestDietLogResponse::from)
                 .toList();
     }
