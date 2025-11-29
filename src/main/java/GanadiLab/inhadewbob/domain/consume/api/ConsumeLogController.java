@@ -41,22 +41,24 @@ public class ConsumeLogController {
     /* 소비 현황 조회 */
     @GetMapping("/status")
     public ResponseEntity<ConsumeStatusResponse> getConsumeStat(
-            @RequestParam("date") LocalDate date
+            @RequestParam("date") LocalDate date,
+            @AuthenticationPrincipal PrincipalDetails principal
     ) {
         return ResponseEntity.ok().body(
                 // 아직 임의의 memberId 삽입 -> 추후 로그인한 회원으로 변경
-                consumeLogService.getConsumeStatus(date, 1L)
+                consumeLogService.getConsumeStatus(date, principal.getMember())
         );
     }
 
     /* 소비 통계 조회 */
     @GetMapping("/statistics")
     public ResponseEntity<ConsumeStatResponse> getConsumeStats(
-            @RequestParam("date") LocalDate date
+            @RequestParam("date") LocalDate date,
+            @AuthenticationPrincipal PrincipalDetails principal
     ) {
         return ResponseEntity.ok().body(
                 // 아직 임의의 memberId 삽입 -> 추후 로그인한 회원으로 변경
-                consumeLogService.getConsumeStats(date, 1L)
+                consumeLogService.getConsumeStats(date, principal.getMember())
         );
     }
 }

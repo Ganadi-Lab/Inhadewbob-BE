@@ -75,10 +75,9 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
     }
 
     @Override
-    public ConsumeStatusResponse getConsumeStatus(LocalDate today, Long memberId) {
+    public ConsumeStatusResponse getConsumeStatus(LocalDate today, Member member) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        Long memberId =  member.getId();
 
         Integer budget = member.getWeeklyBudget();
 
@@ -97,10 +96,9 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
 
     // 이번 주, 지난 주, 지지난 주 소비 통계
     @Override
-    public ConsumeStatResponse getConsumeStats(LocalDate today, Long memberId) {
+    public ConsumeStatResponse getConsumeStats(LocalDate today, Member member) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        Long memberId = member.getId();
 
         // 현재 달
         int currentMonth = today.getMonthValue();
@@ -128,7 +126,7 @@ public class ConsumeLogServiceImpl implements ConsumeLogService{
     }
 
     private Integer sumWeeklySpent(LocalDate date, Long memberId) {
-        
+
         // 주차 날짜 범위 계산
         LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
         LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
