@@ -2,8 +2,8 @@ package GanadiLab.inhadewbob.global.oauth;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
-import GanadiLab.inhadewbob.global.security.jwt.JwtTokenProvider;
-import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
+import GanadiLab.inhadewbob.global.jwt.JwtTokenProvider;
+import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import GanadiLab.inhadewbob.global.oauth.dto.GoogleUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

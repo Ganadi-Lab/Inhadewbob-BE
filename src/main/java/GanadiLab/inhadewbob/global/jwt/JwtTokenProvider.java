@@ -1,4 +1,4 @@
-package GanadiLab.inhadewbob.global.security.jwt;
+package GanadiLab.inhadewbob.global.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
