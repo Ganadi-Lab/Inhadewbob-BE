@@ -1,4 +1,4 @@
-package GanadiLab.inhadewbob.global.config.auth;
+package GanadiLab.inhadewbob.global.security.auth;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import lombok.Getter;

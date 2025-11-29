@@ -33,9 +33,9 @@ public class DietLogServiceImpl implements DietLogService {
     private final ConsumeLogRepository consumeLogRepository;
 
     @Override
-    public DietLogResponse create(DietLogCreateRequest request) {
+    public DietLogResponse create(Long memberId, DietLogCreateRequest request) {
 
-        Member member = memberRepository.findById(request.getMemberId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         Menu menu = menuRepository.findById(request.getMenuId())

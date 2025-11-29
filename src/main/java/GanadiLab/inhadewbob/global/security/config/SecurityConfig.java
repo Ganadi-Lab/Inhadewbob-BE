@@ -1,6 +1,9 @@
-package GanadiLab.inhadewbob.global.config.auth;
+package GanadiLab.inhadewbob.global.security.config;
 
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
+import GanadiLab.inhadewbob.global.oauth.CustomOAuth2UserService;
+import GanadiLab.inhadewbob.global.security.jwt.JwtAuthenticationFilter;
+import GanadiLab.inhadewbob.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

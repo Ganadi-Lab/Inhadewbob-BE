@@ -5,8 +5,10 @@ import GanadiLab.inhadewbob.domain.diet.dto.response.DietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.dto.response.LatestDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.dto.response.WeeklyDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.service.DietLogService;
+import GanadiLab.inhadewbob.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +21,23 @@ public class DietLogController {
     private final DietLogService dietLogService;
 
     @PostMapping
-    public DietLogResponse create(@RequestBody DietLogCreateRequest request) {
-
-        return dietLogService.create(request);
+    public DietLogResponse create(@AuthenticationPrincipal PrincipalDetails principal, @RequestBody DietLogCreateRequest request) {
+        Long memberId = principal.getMember().getId();
+        return dietLogService.create(memberId, request);
     }
 
-    @GetMapping("/{memberId}")
-    public List<DietLogResponse> getByMember(@PathVariable Long memberId) {
-
+    @GetMapping
+    public List<DietLogResponse> getByMember(@AuthenticationPrincipal PrincipalDetails principal) {
+        Long memberId = principal.getMember().getId();
         return dietLogService.getByMember(memberId);
     }
 
-    @GetMapping("/{memberId}/daily")
+    @GetMapping("/daily")
     public List<DietLogResponse> getDaily(
-            @PathVariable Long memberId,
+            @AuthenticationPrincipal PrincipalDetails principal,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
+        Long memberId = principal.getMember().getId();
         return dietLogService.getDaily(memberId, date);
     }
 
