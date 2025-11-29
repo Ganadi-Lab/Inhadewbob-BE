@@ -32,6 +32,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String providerId;      // 구글 sub
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Column(name = "weekly_budget", nullable = true)
     Integer weeklyBudget;
 
