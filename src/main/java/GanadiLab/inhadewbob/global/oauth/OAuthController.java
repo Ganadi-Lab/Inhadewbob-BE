@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class OAuthController {
 
     // 2) 구글 로그인 후 redirect_uri로 code 전달됨
     @GetMapping("/login/google/callback")
-    public ResponseEntity<?> googleCallback(@RequestParam("code") String code) {
+    public RedirectView googleCallback(@RequestParam("code") String code) {
 
         String googleAccessToken = googleOAuthService.getAccessToken(code);
         GoogleUserInfo userInfo = googleOAuthService.getUserInfo(googleAccessToken);
@@ -48,12 +49,20 @@ public class OAuthController {
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
         member.setRefreshToken(refreshToken);
         memberRepository.save(member);
-
+        /*
         return ResponseEntity.ok(
                 Map.of(
                         "access_token", accessToken,
                         "refresh_token", refreshToken
                 )
+        );
+         */
+
+        // 프론트 앱으로 redirect
+        return new RedirectView(
+                "Inhadewbob-FE://auth/callback" +
+                        "?access_token=" + accessToken +
+                        "&refresh_token=" + refreshToken
         );
     }
 
