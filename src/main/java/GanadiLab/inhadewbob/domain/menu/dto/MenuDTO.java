@@ -53,7 +53,7 @@ public class MenuDTO {
                     .menuName(menu.getName())
                     .category(menu.getCategory())
                     .price(menu.getPrice())
-                    .imagePath(menu.getStoredFileName())
+                    .imagePath("/uploads/" + menu.getStoredFileName())
                     .build();
         }
     }

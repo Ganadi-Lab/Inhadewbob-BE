@@ -12,10 +12,14 @@ import GanadiLab.inhadewbob.global.base.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -26,6 +30,8 @@ public class MenuServiceImpl implements MenuService {
     private final MemberRepository memberRepository;
     private final DietLogRepository dietLogRepository;
     private final ConsumeLogRepository consumeLogRepository;
+
+    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
     @Override
     public MenuDTO.Response getMenusByRoulette(LocalDate date, List<String> categories, Integer price, Member member) {
@@ -91,5 +97,33 @@ public class MenuServiceImpl implements MenuService {
         recommendation = remainingBudget / remainingEatoutCount;
 
         return MenuDTO.RecommendResponse.from(recommendation);
+    }
+
+    @Override
+    public void saveMenuImage(Long menuId, MultipartFile file) {
+
+        Menu menu = menuRepository.findById(menuId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 메뉴입니다.")
+        );
+
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("이미지가 존재하지 않습니다.");
+        }
+
+        String originalFileName = file.getOriginalFilename();
+        String storedFileName = UUID.randomUUID() + "_" + originalFileName;
+
+        String path = UPLOAD_DIR + storedFileName;
+
+        try {
+            File destination = new File(path);
+            destination.getParentFile().mkdirs();
+            file.transferTo(destination);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("파일 저장 실패");
+        }
+
+        menu.setOriginalFileName(originalFileName);
+        menu.setStoredFileName(storedFileName);
     }
 }
