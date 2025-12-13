@@ -4,13 +4,10 @@ import GanadiLab.inhadewbob.domain.menu.dto.MenuDTO;
 import GanadiLab.inhadewbob.domain.menu.service.MenuService;
 import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,11 +35,23 @@ public class MenuController {
     /* 추천 예산 조회 */
     @GetMapping("/recom")
     public ResponseEntity<MenuDTO.RecommendResponse> getRecommendPrice(
-            @Param("date") LocalDate date,
+            @RequestParam("date") LocalDate date,
             @AuthenticationPrincipal PrincipalDetails principal
     ) {
         return ResponseEntity.ok().body(
                 menuService.getRecommendation(date, principal.getMember())
+        );
+    }
+
+    @PostMapping("/image/{menuId}")
+    public ResponseEntity<String> registerMenuImage(
+            @PathVariable("menuId") Long menuId,
+            @RequestParam("file") MultipartFile file
+    ) {
+        menuService.saveMenuImage(menuId, file);
+
+        return ResponseEntity.ok().body(
+                "메뉴 이미지 등록 성공"
         );
     }
 }
