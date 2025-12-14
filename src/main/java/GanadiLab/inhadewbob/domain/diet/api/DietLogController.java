@@ -59,4 +59,12 @@ public class DietLogController {
         return dietLogService.getLatest(principal.getMember());
     }
 
+    @DeleteMapping("/{dietLogId}")
+    public void delete(
+            @AuthenticationPrincipal PrincipalDetails principal,
+            @PathVariable Long dietLogId
+    ) {
+        dietLogService.delete(dietLogId, principal.getMember().getId());
+    }
+
 }

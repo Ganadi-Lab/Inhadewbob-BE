@@ -139,4 +139,33 @@ public class DietLogServiceImpl implements DietLogService {
                 .map(LatestDietLogResponse::from)
                 .toList();
     }
+
+    @Override
+    public void delete(Long dietLogId, Long memberId) {
+
+        DietLog dietLog = dietLogRepository.findById(dietLogId)
+                .orElseThrow(() -> new IllegalArgumentException("식단 기록 없음"));
+
+        if (!dietLog.getMember().getId().equals(memberId)) {
+            throw new IllegalStateException("삭제 권한 없음");
+        }
+
+        int price = dietLog.getMenu().getPrice();
+        LocalDate date = dietLog.getCreatedAt().toLocalDate();
+
+        LocalDate start = DateUtil.getStartOfWeek(date);
+        LocalDate end = DateUtil.getEndOfWeek(date);
+
+        ConsumeLog weeklyLog = consumeLogRepository
+                .findWeeklyLog(memberId, start, end)
+                .orElseThrow();
+
+        // 예산 복구
+        weeklyLog.setSpentAmount(weeklyLog.getSpentAmount() - price);
+        weeklyLog.setRemainingBudget(weeklyLog.getRemainingBudget() + price);
+
+        consumeLogRepository.save(weeklyLog);
+        dietLogRepository.delete(dietLog);
+    }
+
 }

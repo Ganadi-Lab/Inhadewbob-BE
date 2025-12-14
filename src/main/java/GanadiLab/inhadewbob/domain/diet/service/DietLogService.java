@@ -25,4 +25,6 @@ public interface DietLogService {
 
     /* 최근 식사 5개 조회 */
     List<LatestDietLogResponse> getLatest(Member member);
+
+    void delete(Long dietLogId, Long memberId);
 }
