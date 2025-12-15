@@ -7,6 +7,8 @@ import GanadiLab.inhadewbob.domain.diet.dto.response.LatestDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.dto.response.WeeklyDietLogResponse;
 import GanadiLab.inhadewbob.domain.diet.model.DietLog;
 import GanadiLab.inhadewbob.domain.diet.repository.DietLogRepository;
+import GanadiLab.inhadewbob.domain.manualDietDetail.model.ManualDietDetail;
+import GanadiLab.inhadewbob.domain.manualDietDetail.repository.ManualDietDetailRepository;
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.member.repository.MemberRepository;
 import GanadiLab.inhadewbob.domain.menu.model.Menu;
@@ -31,6 +33,7 @@ public class DietLogServiceImpl implements DietLogService {
     private final MemberRepository memberRepository;
     private final MenuRepository menuRepository;
     private final ConsumeLogRepository consumeLogRepository;
+    private final ManualDietDetailRepository manualDietDetailRepository;
 
     @Override
     public DietLogResponse create(Long memberId, DietLogCreateRequest request) {
@@ -38,12 +41,73 @@ public class DietLogServiceImpl implements DietLogService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
+        // 수기 입력인 경우
+        if (request.getMenuId()==null) {
+            Menu manualMenu = menuRepository.findById(10001L)
+                    .orElseThrow(() -> new IllegalStateException("MANUAL 메뉴가 없습니다."));
+
+            // DietLog 저장
+            DietLog dietLog = dietLogRepository.save(
+                    DietLog.builder()
+                            .member(member)
+                            .menu(manualMenu)
+                            .build()
+            );
+
+            // 수기 상세 저장 (실제 입력값)
+            ManualDietDetail detail = manualDietDetailRepository.save(
+                    ManualDietDetail.builder()
+                            .dietLog(dietLog)
+                            .date(request.getDate())
+                            .time(request.getTime())
+                            .restaurantName(request.getRestaurantName())
+                            .menuName(request.getMenuName())
+                            .price(request.getPrice())
+                            .build()
+            );
+
+            dietLog.setManualDietDetail(detail);
+
+            // 예산 차감
+            LocalDate date = request.getDate();
+
+            LocalDate startOfWeek = DateUtil.getStartOfWeek(date);
+            LocalDate endOfWeek = DateUtil.getEndOfWeek(date);
+
+            ConsumeLog weeklyLog = consumeLogRepository.findWeeklyLog(member.getId(), startOfWeek, endOfWeek).orElseGet(() ->
+                    consumeLogRepository.save(
+                            ConsumeLog.builder()
+                                    .member(member)
+                                    .date(date)
+                                    .spentAmount(0)
+                                    .remainingBudget(member.getWeeklyBudget())
+                                    .build()
+                    )
+            );
+
+            int price = request.getPrice();
+            int updatedSpent = weeklyLog.getSpentAmount() + price;
+            int updatedRemaining = weeklyLog.getRemainingBudget() - price;
+
+            weeklyLog = consumeLogRepository.save(
+                    ConsumeLog.builder()
+                            .id(weeklyLog.getId())
+                            .member(weeklyLog.getMember())
+                            .date(weeklyLog.getDate())
+                            .spentAmount(updatedSpent)
+                            .remainingBudget(updatedRemaining)
+                            .build()
+            );
+
+            return DietLogResponse.from(dietLog);
+        }
+
+        //기존 메뉴인 경우
         Menu menu = menuRepository.findById(request.getMenuId())
                 .orElseThrow(() -> new IllegalArgumentException("메뉴가 존재하지 않습니다."));
 
         // 날짜
         LocalDate today = LocalDate.now();
-        String todayStr = today.toString();
 
         // 이번 주의 범위 계산
         LocalDate startOfWeek = DateUtil.getStartOfWeek(today);
@@ -150,7 +214,13 @@ public class DietLogServiceImpl implements DietLogService {
             throw new IllegalStateException("삭제 권한 없음");
         }
 
-        int price = dietLog.getMenu().getPrice();
+        int price;
+        if (dietLog.getMenu().getCategory().equals("MANUAL")) {
+            price = dietLog.getManualDietDetail().getPrice();
+        } else {
+            price = dietLog.getMenu().getPrice();
+        }
+
         LocalDate date = dietLog.getCreatedAt().toLocalDate();
 
         LocalDate start = DateUtil.getStartOfWeek(date);
