@@ -1,5 +1,6 @@
 package GanadiLab.inhadewbob.domain.diet.model;
 
+import GanadiLab.inhadewbob.domain.manualDietDetail.model.ManualDietDetail;
 import GanadiLab.inhadewbob.domain.member.model.Member;
 import GanadiLab.inhadewbob.domain.menu.model.Menu;
 import GanadiLab.inhadewbob.global.base.model.BaseEntity;
@@ -26,4 +27,7 @@ public class DietLog extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
+
+    @OneToOne(mappedBy = "dietLog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ManualDietDetail manualDietDetail;
 }
