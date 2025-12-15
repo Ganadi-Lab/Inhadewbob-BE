@@ -214,7 +214,13 @@ public class DietLogServiceImpl implements DietLogService {
             throw new IllegalStateException("삭제 권한 없음");
         }
 
-        int price = dietLog.getMenu().getPrice();
+        int price;
+        if (dietLog.getMenu().getCategory().equals("MANUAL")) {
+            price = dietLog.getManualDietDetail().getPrice();
+        } else {
+            price = dietLog.getMenu().getPrice();
+        }
+
         LocalDate date = dietLog.getCreatedAt().toLocalDate();
 
         LocalDate start = DateUtil.getStartOfWeek(date);
