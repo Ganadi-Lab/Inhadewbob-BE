@@ -39,7 +39,13 @@ INSERT INTO menu (restaurant_id, menu_name, category, price) VALUES ('4', '뽀�
 
 INSERT INTO member (username, password, nickname, weakly_budget, weekly_budget, eatout_count, mode) VALUES ('test1', '1234', 'test1', 0, 200000, 2, 'EASY');
 
+-- Restaurant (더미)
+INSERT INTO restaurant (restaurant_id, restaurant_name, location)
+VALUES (10001, '수기입력', 'MANUAL');
 
+-- Menu (더미)
+INSERT INTO menu (menu_id, restaurant_id, menu_name, category, price)
+VALUES (10001, 10001, '수기입력', 'MANUAL', 0);
 
 
 

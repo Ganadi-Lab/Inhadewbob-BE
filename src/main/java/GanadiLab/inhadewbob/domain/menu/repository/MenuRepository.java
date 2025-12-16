@@ -15,6 +15,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
             "WHERE category IN (:categories) " +
             "AND price <= :price " +
             "AND menu_id NOT IN (:lastWeeks) " +
+            "AND menu_id <> 10001 " +
             "ORDER BY RAND() LIMIT 4", nativeQuery = true)
     List<Menu> findMenusByRoulette(@Param("categories") List<String> categories,
                                    @Param("price") Integer price,
@@ -25,7 +26,8 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
             "WHERE category IN (:categories) " +
             "AND price = :price " +
             "AND menu_id NOT IN (:lastWeeks) " +
-            "AND menu_id NOT IN (:selectedMenus)" +
+            "AND menu_id NOT IN (:selectedMenus) " +
+            "AND menu_id <> 10001 " +
             "ORDER BY RAND() LIMIT 2", nativeQuery = true)
     List<Menu> findMenusAround(@Param("categories") List<String> categories,
                                  @Param("price") Integer price,
