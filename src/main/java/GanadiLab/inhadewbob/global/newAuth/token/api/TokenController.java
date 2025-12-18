@@ -3,9 +3,11 @@ package GanadiLab.inhadewbob.global.newAuth.token.api;
 import GanadiLab.inhadewbob.global.auth.PrincipalDetails;
 import GanadiLab.inhadewbob.global.newAuth.token.dto.request.LoginRequest;
 import GanadiLab.inhadewbob.global.newAuth.token.dto.request.RefreshRequest;
+import GanadiLab.inhadewbob.global.newAuth.token.dto.request.SignupRequest;
 import GanadiLab.inhadewbob.global.newAuth.token.dto.request.UpdateProfileRequest;
 import GanadiLab.inhadewbob.global.newAuth.token.dto.response.LoginResponse;
 import GanadiLab.inhadewbob.global.newAuth.token.dto.response.ProfileResponse;
+import GanadiLab.inhadewbob.global.newAuth.token.dto.response.SignupResponse;
 import GanadiLab.inhadewbob.global.newAuth.token.service.MemberAuthService;
 import GanadiLab.inhadewbob.global.newAuth.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,19 @@ public class TokenController {
         TokenService.LoginTokens tokens = tokenService.login(request);
         return ResponseEntity.ok(
                 new LoginResponse(tokens.accessToken(), tokens.refreshToken())
+        );
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<SignupResponse> signup(
+            @RequestBody SignupRequest request
+    ) {
+        return ResponseEntity.ok(
+                memberAuthService.signup(
+                        request.getEmail(),
+                        request.getPassword(),
+                        request.getNickname()
+                )
         );
     }
 

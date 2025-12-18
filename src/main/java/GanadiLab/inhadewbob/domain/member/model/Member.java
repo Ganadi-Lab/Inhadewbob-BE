@@ -30,21 +30,21 @@ public class Member extends BaseEntity {
     String nickname;
 
     @Column(nullable = false)
-    private String provider;        // "google"
+    private String provider = "local"; // 기본값 지정
 
     @Column(nullable = false, unique = true)
-    private String providerId;      // 구글 sub
+    private String providerId = "";      // 구글 sub
 
     @Column(name = "refresh_token")
     private String refreshToken;
 
     @Column(name = "weekly_budget", nullable = true)
-    Integer weeklyBudget;
+    Integer weeklyBudget=0;
 
     @Column(name = "eatout_count", nullable = false)
-    Integer eatoutCount;
+    Integer eatoutCount=0;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    Mode mode;
+    Mode mode = Mode.EASY;
 }
