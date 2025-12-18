@@ -1,4 +1,4 @@
-package NotFound.next_campus.global.auth.token.dto.request;
+package GanadiLab.inhadewbob.global.newAuth.token.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

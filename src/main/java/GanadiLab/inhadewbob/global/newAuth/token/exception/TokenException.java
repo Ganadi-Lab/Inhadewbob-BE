@@ -1,4 +1,4 @@
-package NotFound.next_campus.global.auth.token.exception;
+package GanadiLab.inhadewbob.global.newAuth.token.exception;
 
 
 public class TokenException extends RuntimeException {

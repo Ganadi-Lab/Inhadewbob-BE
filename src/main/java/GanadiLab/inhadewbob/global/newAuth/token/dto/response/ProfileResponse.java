@@ -1,14 +1,21 @@
-package NotFound.next_campus.global.auth.token.dto.response;
+package GanadiLab.inhadewbob.global.newAuth.token.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import GanadiLab.inhadewbob.domain.member.model.Member;
 
-@Getter
-@AllArgsConstructor
-public class ProfileResponse {
-    private Long studentId;
-    private String name;
-    private String email;
-    private String department;
-    private String role;
+public record ProfileResponse(
+        Long id,
+        String email,
+        String nickname,
+        Integer eatoutCount,
+        Integer weeklyBudget
+) {
+    public static ProfileResponse from(Member member) {
+        return new ProfileResponse(
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getEatoutCount(),
+                member.getWeeklyBudget()
+        );
+    }
 }
