@@ -1,3 +1,4 @@
+
 package GanadiLab.inhadewbob.global.oauth;
 
 import GanadiLab.inhadewbob.domain.member.model.Member;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/auth2")
 public class OAuthController {
 
     private final GoogleOAuthService googleOAuthService;
@@ -118,10 +119,11 @@ public class OAuthController {
         }
 
         // 2) 토큰에서 사용자 ID 추출
-        Long userId = jwtTokenProvider.getUserId(refreshToken);
+        Long memberId = jwtTokenProvider.getMemberIdFromToken(refreshToken);
+
 
         // 3) DB에 저장된 refresh token과 비교
-        Member member = memberRepository.findById(userId)
+        Member member = memberRepository.findById(memberId)
                 .orElse(null);
 
         if (member == null || member.getRefreshToken() == null ||
@@ -130,7 +132,7 @@ public class OAuthController {
         }
 
         // 4) 새 access token 발급
-        String newAccessToken = jwtTokenProvider.createAccessToken(userId);
+        String newAccessToken = jwtTokenProvider.createAccessToken(memberId);
 
         return ResponseEntity.ok(
                 Map.of("access_token", newAccessToken)

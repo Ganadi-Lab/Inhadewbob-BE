@@ -19,6 +19,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+    /*
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/auth2/");
+    }
+
+     */
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,9 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             if (jwtTokenProvider.validateToken(token)) {
-                Long userId = jwtTokenProvider.getUserId(token);
+                Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
 
-                Member member = memberRepository.findById(userId).orElse(null);
+                Member member = memberRepository.findById(memberId).orElse(null);
 
                 if (member != null) {
                     PrincipalDetails principalDetails = new PrincipalDetails(member, null);

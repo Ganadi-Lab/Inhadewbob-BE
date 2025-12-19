@@ -33,7 +33,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Long getUserId(String token) {
+    public Long getMemberIdFromToken(String token) {
         return Long.parseLong(
                 Jwts.parser()
                         .setSigningKey(SECRET.getBytes())
